@@ -13,7 +13,7 @@ export default function MemoListScreen() {
 
       <MemoList />
 
-      <CircleButton>あ</CircleButton>
+      <CircleButton name="plus" />
     </View>
   );
 }
