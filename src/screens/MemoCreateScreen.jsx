@@ -3,18 +3,20 @@ import {
   View, Text, StyleSheet, TextInput, KeyboardAvoidingView,
 } from 'react-native';
 
-import AppBar from '../components/Appbar';
 import CircleButton from '../components/CircleButton';
 
 // eslint-disable-next-line react/function-component-definition
-export default function MemoCreateScreen() {
+export default function MemoCreateScreen(props) {
+  const { navigation } = props;
   return (
     <KeyboardAvoidingView style={styles.container} behavior="height">
-      <AppBar />
       <View style={styles.inputContainer}>
         <TextInput value="" multiline style={styles.input}></TextInput>
       </View>
-      <CircleButton name="check" />
+      <CircleButton
+        name="check"
+        onPress={ () => navigation.goBack() }
+      />
     </KeyboardAvoidingView>
   );
 }

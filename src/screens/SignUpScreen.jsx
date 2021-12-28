@@ -1,22 +1,36 @@
 import React from 'react';
 import { View, Text, StyleSheet, TextInput, TouchableWithoutFeedbackBase, TouchableOpacity } from 'react-native';
 
-import AppBar from '../components/Appbar.jsx';
 import Button from '../components/Button.jsx';
 
 // eslint-disable-next-line react/function-component-definition
-export default function SignUpScreen() {
+export default function SignUpScreen(props) {
+  const { navigation } = props;
   return (
     <View style={styles.container}>
-      <AppBar />
       <View style={styles.inner}>
         <Text style={styles.title}>Sign Up</Text>
         <TextInput style={styles.input} value="Email address" placeholder="hogehoge@" />
         <TextInput style={styles.input} value="password" placeholder="password" />
-        <Button label="Submit" />
+        <Button
+          label="Submit"
+          onPress={() => {
+            navigation.reset({
+              index: 0,
+              routes: [{ name: 'MemoList' }],
+            });
+          }}
+        />
         <View style={styles.footer}>
           <Text style={styles.footerText}>Already registered?</Text>
-          <TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => {
+              navigation.reset({
+                index: 0,
+                routes: [{ name: 'LogIn' }],
+              });
+            }}
+          >
             <Text style={styles.footerLink}>Log In.</Text>
           </TouchableOpacity>
         </View>
