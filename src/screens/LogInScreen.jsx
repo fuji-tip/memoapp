@@ -1,17 +1,35 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { View, Text, StyleSheet, TextInput, TouchableWithoutFeedbackBase, TouchableOpacity } from 'react-native';
 
 import Button from '../components/Button.jsx';
 
 // eslint-disable-next-line react/function-component-definition
 export default function LogInScreen(props) {
-  const { navigation } = props;
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');const { navigation } = props;
+
   return (
     <View style={styles.container}>
       <View style={styles.inner}>
         <Text style={styles.title}>Log In</Text>
-        <TextInput style={styles.input} value="Email address" placeholder="hogehoge@" />
-        <TextInput style={styles.input} value="password" placeholder="password" />
+        <TextInput
+          style={styles.input}
+          value={email}
+          placeholder="hogehoge@test.com"
+          onChangeText={(text) => { setEmail(text); }}
+          autoCapitalize="none"
+          keyboardType="email-address"
+          textContentType="emailAddress"
+        />
+        <TextInput
+          style={styles.input}
+          value={password}
+          placeholder="password"
+          onChangeText={(text) => { setPassword(text); }}
+          autoCapitalize="none"
+          secureTextEntry
+          textContentType="password"
+        />
         <Button
           label="Submit"
           onPress={() => {

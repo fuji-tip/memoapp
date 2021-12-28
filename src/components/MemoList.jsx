@@ -18,7 +18,7 @@ export default function MemoList() {
           <Text style={styles.memoListItemDate}>2020/12/24 10:00</Text>
         </View>
         <TouchableOpacity
-          onPress={() => {Alert.alert('are you sure?')}}
+          onPress={() => { Alert.alert('are you sure?'); }}
           style={styles.memoDelete}
         >
           <Feather name="x" size={16} color="#B0B0B0" />
