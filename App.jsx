@@ -1,6 +1,7 @@
 import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator, CardStyleInterpolators } from '@react-navigation/stack';
+import firebase from 'firebase/compat/app';
 
 import MemoListScreen from './src/screens/MemoListScreen.jsx';
 import MemoDetailScreen from './src/screens/MemoDetailScreen.jsx';
@@ -10,7 +11,13 @@ import LogInScreen from './src/screens/LogInScreen.jsx';
 import SignUpScreen from './src/screens/SignUpScreen.jsx';
 import { setStatusBarBackgroundColor } from 'expo-status-bar';
 
+import { firebaseConfig } from './env.js';
+
 const Stack = createStackNavigator();
+
+if (firebase.apps.length === 0) {
+  firebase.initializeApp(firebaseConfig);
+}
 
 // eslint-disable-next-line react/function-component-definition
 export default function App() {
