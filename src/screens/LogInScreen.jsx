@@ -1,14 +1,28 @@
-import React, { useState } from 'react';
+import React, { useState, userEffect, useEffect } from 'react';
 import { View, Text, StyleSheet, TextInput, TouchableWithoutFeedbackBase, TouchableOpacity, Alert } from 'react-native';
 import firebase from 'firebase/compat/app';
-import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
+import { getAuth, onAuthStateChanged, signInWithEmailAndPassword } from 'firebase/auth';
 
 import Button from '../components/Button.jsx';
 
 // eslint-disable-next-line react/function-component-definition
 export default function LogInScreen(props) {
   const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');const { navigation } = props;
+  const [password, setPassword] = useState('');
+  const { navigation } = props;
+
+  useEffect(() => {
+    const auth = getAuth();
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        navigation.reset({
+          index: 0,
+          routes: [{ name: 'MemoList' }],
+        });
+      }
+    });
+    return unsubscribe;
+  }, []);
 
   function handlePress() {
     const auth = getAuth();

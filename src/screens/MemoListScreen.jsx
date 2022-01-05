@@ -1,19 +1,26 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { View, StyleSheet } from 'react-native';
 
 import MemoList from '../components/MemoList.jsx';
 import CircleButton from '../components/CircleButton.jsx';
+import LogOutButton from '../components/LogOutButton.jsx';
 
 // eslint-disable-next-line react/function-component-definition
 export default function MemoListScreen(props) {
   const { navigation } = props;
+  useEffect(() => {
+    navigation.setOptions({
+      headerRight: () => <LogOutButton />,
+    });
+  }, []);
+
   return (
     <View style={styles.container}>
       <MemoList />
 
       <CircleButton
         name="plus"
-        onPress={() => navigation.navigate("MemoCreate") }
+        onPress={() => navigation.navigate('MemoCreate') }
       />
     </View>
   );
