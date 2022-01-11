@@ -1,24 +1,47 @@
-import React from 'react';
+import { shape, string } from 'prop-types';
+import React, { useEffect, useState } from 'react';
 import {
   View, Text, ScrollView, StyleSheet,
 } from 'react-native';
+import { doc, getFirestore, onSnapshot } from 'firebase/firestore';
+import { getAuth } from 'firebase/auth';
 
 import CircleButton from '../components/CircleButton.jsx';
+import { dateToString } from '../utils/index.js';
 
 // eslint-disable-next-line react/function-component-definition
 export default function MemoDetailScreen(props) {
-  const { navigation } = props;
+  const { navigation, route } = props;
+  const { id } = route.params;
+  const [memo, setMemo] = useState(null);
+  let unsubscribe = () => {};
+
+  useEffect(() => {
+    const { currentUser } = getAuth();
+    if (currentUser) {
+      const db = getFirestore();
+      unsubscribe = onSnapshot(doc(db, `users/${currentUser.uid}/memos/${id}`), (docd) => {
+        const data = docd.data();
+        setMemo({
+          id: docd.id,
+          bodyText: data.bodyText,
+          updatedAt: data.updatedAt,
+        });
+      });
+    }
+    return unsubscribe;
+  }, []);
 
   return (
     <View style={styles.container}>
       <View style={styles.memoHeader}>
-        <Text style={styles.memoTitle}>買い物リスト</Text>
-        <Text style={styles.memoDate}>2021/12/24 10:00</Text>
+        <Text style={styles.memoTitle} numberOfLines={1}>{memo && memo.bodyText}</Text>
+        <Text style={styles.memoDate}>{memo && dateToString(memo.updatedAt.toDate())}</Text>
       </View>
 
       <ScrollView style={styles.memoBody}>
         <Text style={styles.memoText}>
-          買い物リスト。イーハトーヴォっっっｌ買い物リスト。イーハトーヴォっっっｌ買い物リスト。イーハトーヴォっっっｌ買い物リスト。イーハトーヴォっっっｌ買い物リスト。イーハトーヴォっっっｌ買い物リスト。
+          {memo && memo.bodyText}
         </Text>
       </ScrollView>
 
@@ -31,6 +54,14 @@ export default function MemoDetailScreen(props) {
     </View>
   );
 }
+
+MemoDetailScreen.propTypes = {
+  route: shape({
+    params: shape({
+      id: string,
+    }),
+  }).isRequired,
+};
 
 const styles = StyleSheet.create({
   container: {
