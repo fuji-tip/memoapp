@@ -1,7 +1,7 @@
 import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator, CardStyleInterpolators } from '@react-navigation/stack';
-import firebase from 'firebase/compat/app';
+import { initializeApp } from 'firebase/app';
 
 import MemoListScreen from './src/screens/MemoListScreen.jsx';
 import MemoDetailScreen from './src/screens/MemoDetailScreen.jsx';
@@ -13,11 +13,9 @@ import { setStatusBarBackgroundColor } from 'expo-status-bar';
 
 import { firebaseConfig } from './env.js';
 
-const Stack = createStackNavigator();
+const app = initializeApp(firebaseConfig);
 
-if (firebase.apps.length === 0) {
-  firebase.initializeApp(firebaseConfig);
-}
+const Stack = createStackNavigator();
 
 // eslint-disable-next-line react/function-component-definition
 export default function App() {
