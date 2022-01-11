@@ -37,6 +37,7 @@ export default function MemoCreateScreen(props) {
           multiline
           style={styles.input}
           autoFocus
+          autoCapitalize='none'
         />
       </View>
       <CircleButton
