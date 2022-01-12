@@ -5,6 +5,7 @@ import { getAuth, onAuthStateChanged, signInWithEmailAndPassword } from 'firebas
 
 import Button from '../components/Button.jsx';
 import Loading from '../components/Loading.jsx';
+import { translateErrors } from '../utils/index.js';
 
 // eslint-disable-next-line react/function-component-definition
 export default function LogInScreen(props) {
@@ -42,7 +43,8 @@ export default function LogInScreen(props) {
       })
       .catch((error) => {
         console.log(error.code, error.message);
-        Alert.alert(error.code);
+        const errorMsg = translateErrors(error.code);
+        Alert.alert(errorMsg.title, errorMsg.description);
       })
       .then(() => {
         setLoading(false);

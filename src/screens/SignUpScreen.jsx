@@ -4,6 +4,7 @@ import firebase from 'firebase/compat/app';
 import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth';
 
 import Button from '../components/Button.jsx';
+import { translateErrors } from '../utils/index.js';
 
 // eslint-disable-next-line react/function-component-definition
 export default function SignUpScreen(props) {
@@ -24,7 +25,8 @@ export default function SignUpScreen(props) {
       })
       .catch((error) => {
         console.log(error.code, error.message);
-        Alert.alert(error.code)
+        const errorMsg = translateErrors(error.code);
+        Alert.alert(errorMsg.title, errorMsg.description);
       });
   }
 

@@ -7,6 +7,7 @@ import { getFirestore, doc, setDoc } from 'firebase/firestore';
 import { getAuth } from 'firebase/auth';
 
 import CircleButton from '../components/CircleButton';
+import translateErrors from '../utils';
 
 // eslint-disable-next-line react/function-component-definition
 export default function MemoEditScreen(props) {
@@ -22,12 +23,13 @@ export default function MemoEditScreen(props) {
       setDoc(ref, {
         bodyText: body,
         updatedAt: new Date(),
-      }, { merge : true })
+      }, { merge: true })
         .then(() => {
           navigation.goBack();
         })
         .catch((error) => {
-          Alert.alert(error.code);
+          const errorMsg = translateErrors(error.code);
+          Alert.alert(errorMsg.title, errorMsg.description);
         });
     }
   }
@@ -40,7 +42,7 @@ export default function MemoEditScreen(props) {
           multiline
           style={styles.input}
           onChangeText={(text) => { setBody(text); }}
-          autoCapitalize='none'
+          autoCapitalize="none"
         />
       </View>
       <CircleButton name="check" onPress={handlePress} />

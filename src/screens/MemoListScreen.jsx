@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { View, StyleSheet, Alert, Text } from 'react-native';
 
-import { getDocs, getFirestore, collection, query, orderBy } from 'firebase/firestore/lite';
+import { onSnapshot, getFirestore, collection, query, orderBy, unsubscribe } from 'firebase/firestore';
 
 import MemoList from '../components/MemoList.jsx';
 import CircleButton from '../components/CircleButton.jsx';
@@ -13,7 +13,7 @@ import Loading from '../components/Loading.jsx';
 // eslint-disable-next-line react/function-component-definition
 export default function MemoListScreen(props) {
   const { navigation } = props;
-  const [memos, setMemos] = useState([]);
+  let [memos, setMemos] = useState([]);
   const [isLoading, setLoading] = useState(false);
 
   useEffect(() => {
@@ -22,33 +22,36 @@ export default function MemoListScreen(props) {
     });
   }, []);
 
-  useEffect(async () => {
+  useEffect(() => {
+    console.log('useEffect');
     const db = getFirestore();
     const { currentUser } = getAuth();
-    let unsubscribe = () => {};
+    let unsub = () => {};
 
     if (currentUser) {
       setLoading(true);
-      const docSnap = await getDocs(query(collection(db, `users/${currentUser.uid}/memos`), orderBy('updatedAt', 'desc')));
+      const q = query(collection(db, `users/${currentUser.uid}/memos`), orderBy('updatedAt', 'desc'));
       const userMemos = [];
 
-      unsubscribe = docSnap.forEach((doc) => {
-        const data = doc.data();
-        userMemos.push({
-          id: doc.id,
-          bodyText: data.bodyText,
-          updatedAt: data.updatedAt,
+      unsub = onSnapshot(q, (querySnapshot) => {
+        userMemos.length = 0;
+        console.log('snapshot');
+        querySnapshot.forEach((doc) => {
+          const data = doc.data();
+          userMemos.push({
+            id: doc.id,
+            bodyText: data.bodyText,
+            updatedAt: data.updatedAt,
+          });
+          setMemos(userMemos);
+          setLoading(false);
         });
-        setMemos(userMemos);
-        setLoading(false);
-        //console.log(userMemos);
       }, (error) => {
-        //console.log(error);
         setLoading(false);
         Alert.alert('データの読み込みに失敗しました');
       });
     }
-    return unsubscribe;
+    return () => unsub();
   }, []);
 
   if (memos.length === 0) {
